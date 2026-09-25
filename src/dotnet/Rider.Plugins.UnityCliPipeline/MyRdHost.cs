@@ -21,19 +21,19 @@ public class MyRdHost
         _solution = solution;
 
         var model = _solution.GetProtocolSolution().GetRdUnityCliPipelineModel();
-        model.MyCall.SetAsync(HandleCall);
-        model.MyIconCall.SetAsync(HandleIconCall);
+        model.MyCall.SetAsync(HandleCallAsync);
+        model.MyIconCall.SetAsync(HandleIconCallAsync);
     }
 
-    private async Task<RdCallResponse> HandleCall(Lifetime lt, RdCallRequest request)
+    private async Task<RdCallResponse> HandleCallAsync(Lifetime lt, RdCallRequest request)
     {
         await Task.Delay(1000, lt);
         return lt.Execute(() => new RdCallResponse(request.MyField.Length));
     }
 
-    private async Task<IconModel> HandleIconCall(Lifetime lt, Unit _)
+    private async Task<IconModel> HandleIconCallAsync(Lifetime lt, Unit _)
     {
         await Task.Delay(1000, lt);
-        return lt.Execute(() => _solution.GetComponent<IIconHost>().Transform(MyIconIds.RiderIconId));
+        return lt.Execute(() => _solution.GetComponent<IIconHost>().Transform(MyIconIds.LogoId));
     }
 }

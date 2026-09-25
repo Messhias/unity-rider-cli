@@ -1,0 +1,65 @@
+<Project>
+  <!--
+    Rider "Build with surface heuristics" (ReSharper Build) often skips NuGet restore and keeps a
+    stale empty project.assets.json. NuGet then reports "up-to-date" even with zero packages, so
+    JetBrains refs never appear (CS0246). This target detects that and runs a forced restore + build.
+  -->
+  <PropertyGroup>
+    <RepoRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '..', '..'))</RepoRoot>
+    <DotNetSdkGeneratedProps>$(RepoRoot)build/DotNetSdkPath.Generated.props</DotNetSdkGeneratedProps>
+    <DotNetNuGetConfig>$(RepoRoot)src/dotnet/nuget.config</DotNetNuGetConfig>
+    <GradleWrapper Condition="$([MSBuild]::IsOSPlatform('windows'))">$(RepoRoot)gradlew.bat</GradleWrapper>
+    <GradleWrapper Condition="!$([MSBuild]::IsOSPlatform('windows'))">$(RepoRoot)gradlew</GradleWrapper>
+    <ProjectAssetsFile Condition="'$(ProjectAssetsFile)' == ''">$(MSBuildProjectDirectory)/obj/$(MSBuildProjectName)/project.assets.json</ProjectAssetsFile>
+  </PropertyGroup>
+
+  <Target Name="EnsureRiderSdkAndJetBrainsRestore"
+          BeforeTargets="CoreCompile"
+          Condition="'$(DesignTimeBuild)' != 'true' And '$(SkipRiderSdkEnsure)' != 'true'">
+
+    <PropertyGroup>
+      <_NeedsPrepare Condition="!Exists('$(DotNetSdkGeneratedProps)') Or !Exists('$(DotNetNuGetConfig)')">true</_NeedsPrepare>
+    </PropertyGroup>
+
+    <Message Importance="high"
+             Condition="'$(_NeedsPrepare)' == 'true'"
+             Text="Rider SDK not prepared — running ./gradlew :prepare..." />
+
+    <Exec Command="&quot;$(GradleWrapper)&quot; :prepare"
+          WorkingDirectory="$(RepoRoot)"
+          Condition="'$(_NeedsPrepare)' == 'true'" />
+
+    <ItemGroup>
+      <_JetBrainsReferencePath Include="@(ReferencePath)"
+                               Condition="$([System.String]::Copy('%(Filename)').StartsWith('JetBrains'))" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <_AssetsText Condition="Exists('$(ProjectAssetsFile)')">$([System.IO.File]::ReadAllText('$(ProjectAssetsFile)'))</_AssetsText>
+      <_AssetsHaveJetBrains Condition="$(_AssetsText.Contains('JetBrains.Rider.RdBackend.Common'))">true</_AssetsHaveJetBrains>
+      <!-- prepare just ran (Imports need re-eval), refs missing, or assets lack the package -->
+      <_NeedsNestedRebuild Condition="'$(_NeedsPrepare)' == 'true'">true</_NeedsNestedRebuild>
+      <_NeedsNestedRebuild Condition="'@(_JetBrainsReferencePath)' == '' And Exists('$(DotNetSdkGeneratedProps)')">true</_NeedsNestedRebuild>
+      <_NeedsNestedRebuild Condition="'$(_AssetsHaveJetBrains)' != 'true' And Exists('$(DotNetSdkGeneratedProps)') And Exists('$(JetBrainsRiderRdBackendCommonReference)')">true</_NeedsNestedRebuild>
+    </PropertyGroup>
+
+    <Message Importance="high"
+             Condition="'$(_NeedsNestedRebuild)' == 'true'"
+             Text="JetBrains packages not resolved — forcing NuGet restore and rebuilding..." />
+
+    <!-- Force restore: NuGet can report up-to-date while project.assets.json has zero packages -->
+    <Exec Command="dotnet restore --force &quot;$(MSBuildProjectFullPath)&quot;"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          Condition="'$(_NeedsNestedRebuild)' == 'true'" />
+
+    <MSBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="Build"
+             Properties="SkipRiderSdkEnsure=true;Configuration=$(Configuration);RestoreDuringBuild=false;BuildingInsideVisualStudio=$(BuildingInsideVisualStudio)"
+             Condition="'$(_NeedsNestedRebuild)' == 'true'" />
+
+    <PropertyGroup Condition="'$(_NeedsNestedRebuild)' == 'true'">
+      <SkipCompilerExecution>true</SkipCompilerExecution>
+      <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    </PropertyGroup>
+  </Target>
+</Project>
