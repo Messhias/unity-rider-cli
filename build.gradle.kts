@@ -125,7 +125,28 @@ tasks {
         inputs.property("buildConfiguration", buildConfiguration)
 
         executable("dotnet")
-        args("build", "-consoleLoggerParameters:ErrorsOnly", "--configuration", buildConfiguration)
+        args(
+            "build",
+            "UnityCliPipeline.sln",
+            "-consoleLoggerParameters:ErrorsOnly",
+            "--configuration",
+            buildConfiguration
+        )
+    }
+
+    val testDotNet by registering(Exec::class) {
+        dependsOn(compileDotNet)
+        inputs.property("buildConfiguration", buildConfiguration)
+
+        executable("dotnet")
+        args(
+            "test",
+            "src/dotnet/Rider.Plugins.UnityCliPipeline.Tests/Rider.Plugins.UnityCliPipeline.Tests.csproj",
+            "--configuration",
+            buildConfiguration,
+            "--nologo",
+            "--no-build"
+        )
     }
 
     withType<KotlinCompile> {
@@ -156,17 +177,19 @@ tasks {
         dependsOn(compileDotNet)
 
         val outputFolder = file("$dotNetSrcDir/$dotNetPluginId/bin/${dotNetPluginId}/$buildConfiguration")
-        val pluginFiles = listOf(
+        val requiredPluginFiles = listOf(
             "$outputFolder/${dotNetPluginId}.dll",
-            "$outputFolder/${dotNetPluginId}.pdb"
+            "$outputFolder/Rider.Plugins.UnityCliPipeline.Core.dll"
         )
 
-        from(pluginFiles) {
+        from(fileTree(outputFolder) {
+            include("*.dll", "*.pdb")
+        }) {
             into("${rootProject.name}/dotnet")
         }
 
         doLast {
-            for (f in pluginFiles) {
+            for (f in requiredPluginFiles) {
                 val file = file(f)
                 if (!file.exists()) throw RuntimeException("File \"$file\" does not exist.")
             }
@@ -195,7 +218,7 @@ tasks {
     }
 
     check {
-        dependsOn(testRiderPreview)
+        dependsOn(testRiderPreview, testDotNet)
     }
 }
 

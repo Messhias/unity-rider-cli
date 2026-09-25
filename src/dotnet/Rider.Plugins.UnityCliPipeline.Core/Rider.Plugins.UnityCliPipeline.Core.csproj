@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Rider.Plugins.UnityCliPipeline</RootNamespace>
+    <AssemblyName>Rider.Plugins.UnityCliPipeline.Core</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Core has no JetBrains deps; skip Rider SDK prepare/restore heuristics -->
+    <SkipRiderSdkEnsure>true</SkipRiderSdkEnsure>
+  </PropertyGroup>
+</Project>

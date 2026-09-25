@@ -5,6 +5,10 @@ Prerequisites
 -------------
 To build the plugin, you'll need .NET SDK 8.0 or later.
 
+Pull requests
+-------------
+Open PRs against `main`. The GitHub PR template asks for a summary, Tasks.md id, and a short test plan. Prefer one task (or a small coherent slice) per PR.
+
 Build
 -----
 Use the following shell command. It will build a plugin ZIP archive in `build/distributions`.
