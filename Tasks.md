@@ -1,4 +1,4 @@
-# Tasks ‚Äî Unity Rider CLI Pipeline
+# Tasks - Unity Rider CLI Pipeline
 
 ## Vision
 
@@ -6,7 +6,7 @@ A Rider plugin that runs **all** Unity Test Framework tests **without relying on
 
 The bundled **Unity Support** plugin ([Run and debug Unity tests](https://www.jetbrains.com/help/rider/Running_and_Debugging_Unity_Tests.html)) requires an open Editor plus `com.unity.ide.rider`. This project fills that gap: headless runner via CLI / Production Pipeline.
 
-Everything below follows **TDD**: failing test ‚Üí minimal implementation ‚Üí refactor. `./gradlew :check` and .NET backend tests must pass per slice.
+Everything below follows **TDD**: failing test "Üí minimal implementation "Üí refactor. `./gradlew :check` and .NET backend tests must pass per slice.
 
 ---
 
@@ -20,7 +20,7 @@ Everything below follows **TDD**: failing test ‚Üí minimal implementation ‚Üí re
 | **Play Mode** | `PlayMode` | Play Mode **inside** the Editor |
 | **Player** | a `BuildTarget` value (e.g. `StandaloneOSX`, `StandaloneWindows64`, `StandaloneLinux64`) | Play Mode in a **Player** for that platform |
 
-Source: [Command-line reference ‚Äî Unity Test Framework](https://docs.unity.com/en-us/engine/6000.7/manual/scripting/test-framework-introduction/reference-command-line) (`-testPlatform`).
+Source: [Command-line reference - Unity Test Framework](https://docs.unity.com/en-us/engine/6000.7/manual/scripting/test-framework-introduction/reference-command-line) (`-testPlatform`).
 
 ### Unity CLI vs Pipeline package
 
@@ -32,7 +32,7 @@ Source: [Command-line reference ‚Äî Unity Test Framework](https://docs.unity.com
 Sources:
 
 - [Compare CLI and Pipeline package](https://docs.unity.com/en-us/unity-production-pipeline/local-tools-cli/unity-cli-pipeline-package)
-- [Unity CLI reference ‚Äî `test`](https://docs.unity.com/en-us/unity-cli/unity-cli-reference)
+- [Unity CLI reference - `test`](https://docs.unity.com/en-us/unity-cli/unity-cli-reference)
 - Pipeline `run_tests`: [build-and-compilation commands](https://docs.unity3d.com/Packages/com.unity.pipeline@0.3/manual/commands/build-and-compilation.html) (`mode`: `all` \| `editor` \| `playmode`)
 
 ### Canonical commands (MVP)
@@ -48,8 +48,8 @@ Relevant CLI exit codes:
 | Code | Meaning |
 |---|---|
 | `0` | All passed |
-| `8` | Run finished; ‚â•1 test failed (`TESTS_FAILED`) ‚Äî **do not** retry |
-| `6` | Infrastructure (compile, license, crash, timeout, invalid platform) ‚Äî retry possible |
+| `8` | Run finished; "â•1 test failed (`TESTS_FAILED`) - **do not** retry |
+| `6` | Infrastructure (compile, license, crash, timeout, invalid platform) - retry possible |
 | `2` | Bad arguments |
 
 Report format: NUnit3 XML (`-testResults` / `--output`). See [Test Result XML Format (NUnit)](https://docs.nunit.org/articles/nunit/technical-notes/usage/Test-Result-XML-Format.html).
@@ -62,9 +62,9 @@ Unit Testing extension points on the .NET backend:
 - `IUnitTestMetadataExplorer` / file explorer
 - `IUnitTestElement` + `RecursiveRemoteTaskRunner` (or a host that starts an external process and reports via `IRemoteTaskServer`)
 
-Source: [Unit Test Framework Support ‚Äî ReSharper SDK](https://www.jetbrains.com/help/resharper/sdk/UnitTest.html).
+Source: [Unit Test Framework Support - ReSharper SDK](https://www.jetbrains.com/help/resharper/sdk/UnitTest.html).
 
-Optional Kotlin frontend for MVP: RD protocol stub in `protocol/‚Ä¶/RdUnityCliPipelineModel.kt` ‚Äî settings UI, progress, Player target selection.
+Optional Kotlin frontend for MVP: RD protocol stub in `protocol/""¶/RdUnityCliPipelineModel.kt` - settings UI, progress, Player target selection.
 
 Current scaffold: [resharper-rider-plugin](https://github.com/JetBrains/resharper-rider-plugin) (Gradle + RD + .NET backend).
 
@@ -72,7 +72,7 @@ Current scaffold: [resharper-rider-plugin](https://github.com/JetBrains/resharpe
 
 ## TDD rules for this repo
 
-1. **Red ‚Üí green ‚Üí refactor** per numbered task.
+1. **Red "Üí green "Üí refactor** per numbered task.
 2. Testable layers **without** a real Rider/Unity first (arg builder, XML parser, exit-code mapping).
 3. Mockable process contracts (`IUnityCliProcess`); real UTF XML fixtures under `testData/`.
 4. Real Unity integration only on tasks marked `[integration]` / nightly (opt-in).
@@ -80,17 +80,17 @@ Current scaffold: [resharper-rider-plugin](https://github.com/JetBrains/resharpe
 
 ---
 
-## Epic 0 ‚Äî Plugin foundation
+## Epic 0 - Plugin foundation
 
 ### 0.1 Plugin identity and dependencies
-- [ ] Update `plugin.xml`: name, id, description aligned with the product (Unity CLI Test Runner).
-- [ ] Declare dependency on Unity Support **or** document coexistence (do not break existing gutter/discovery).
-- [ ] Test: valid `plugin.xml` / `./gradlew :buildPlugin` produces a ZIP.
+- [x] Update `plugin.xml`: name, id, description aligned with the product (Unity CLI Test Runner).
+- [x] Declare dependency on Unity Support **or** document coexistence (do not break existing gutter/discovery).
+- [x] Test: valid `plugin.xml` / `./gradlew :buildPlugin` produces a ZIP.
 
 ### 0.2 Detect a Unity project from the Rider solution
 - [ ] **TDD:** given a solution path, detect Unity root (`Assets/`, `Packages/manifest.json`, `ProjectSettings/ProjectVersion.txt`).
 - [ ] Return `UnityProjectInfo` (path, `editorVersion` from `ProjectVersion.txt`).
-- [ ] Negative: plain .NET solution ‚Üí provider inactive.
+- [ ] Negative: plain .NET solution "Üí provider inactive.
 
 ### 0.3 Resolve the `unity` CLI binary
 - [ ] **TDD:** PATH resolution (`which unity` / `Get-Command`), settings override, clear error if missing.
@@ -99,69 +99,69 @@ Current scaffold: [resharper-rider-plugin](https://github.com/JetBrains/resharpe
 
 ---
 
-## Epic 1 ‚Äî `unity test` client (core, no UI)
+## Epic 1 - `unity test` client (core, no UI)
 
 ### 1.1 Test-mode model
 - [ ] **TDD:** enum/value object `UnityTestTarget`:
   - `EditMode`
   - `PlayMode`
-  - `Player(BuildTarget)` ‚Äî canonical Unity enum string (`StandaloneOSX`, `StandaloneWindows64`, ‚Ä¶)
-- [ ] **TDD:** serialization ‚Üî `--mode <value>` (CLI is case-insensitive).
+  - `Player(BuildTarget)` - canonical Unity enum string (`StandaloneOSX`, `StandaloneWindows64`, ""¶)
+- [ ] **TDD:** serialization "Üî `--mode <value>` (CLI is case-insensitive).
 - [ ] Supported BuildTargets table for MVP (desktop first); mobile/console = backlog.
 
 ### 1.2 `UnityTestCommandBuilder`
 - [ ] **TDD:** builds argv:
   - `test <projectPath>`
-  - `--mode ‚Ä¶`
-  - `--filter ‚Ä¶` (optional)
-  - `--output ‚Ä¶`
+  - `--mode ""¶`
+  - `--filter ""¶` (optional)
+  - `--output ""¶`
   - `--report-format nunit` (internal default)
   - `--format json`
-  - `--timeout ‚Ä¶`
+  - `--timeout ""¶`
   - `--non-interactive` / `--no-banner` when applicable
-- [ ] **TDD:** never inject reserved flags after `--` (`-batchmode`, `-runTests`, `-testPlatform`, ‚Ä¶) ‚Äî the CLI rejects them.
+- [ ] **TDD:** never inject reserved flags after `--` (`-batchmode`, `-runTests`, `-testPlatform`, ""¶) - the CLI rejects them.
 - [ ] **TDD:** per-session isolated output path (Rider temp).
 
 ### 1.3 Process execution + exit codes
-- [ ] **TDD:** wrapper `IUnityCliRunner.RunAsync(request, ct)` ‚Üí `UnityTestRunResult`:
+- [ ] **TDD:** wrapper `IUnityCliRunner.RunAsync(request, ct)` "Üí `UnityTestRunResult`:
   - `Outcome`: Passed \| FailedTests \| InfraError \| BadArgs \| Cancelled
   - mapping `0/8/6/2`
   - stdout JSON envelope (`success`, `errors[0].code`: `TESTS_FAILED` vs `TEST_RUN_ERROR` / `TEST_TIMED_OUT`)
   - XML path
-- [ ] **TDD:** cancellation (SIGINT/kill) ‚Üí `Cancelled`, not FailedTests.
+- [ ] **TDD:** cancellation (SIGINT/kill) "Üí `Cancelled`, not FailedTests.
 - [ ] **TDD:** process timeout aligned with `--timeout`.
 
 ### 1.4 NUnit3 XML parser (UTF)
 - [ ] **TDD:** fixtures under `testData/nunit/` (passed, failed, ignored, parameterized, nested suites).
 - [ ] Extract: fullname, classname, methodname, result, duration, message, stacktrace, assertions.
-- [ ] **TDD:** empty suite / truncated XML ‚Üí typed error (infra), not ‚Äú0 passed‚Äù.
+- [ ] **TDD:** empty suite / truncated XML "Üí typed error (infra), not """0 passed""".
 - [ ] (Optional) JUnit parser if `--report-format junit` is used later.
 
 ### 1.5 Filters
-- [ ] **TDD:** map Rider selection (assembly / fixture / method / category) ‚Üí `--filter` / documented editor-flag policy.
+- [ ] **TDD:** map Rider selection (assembly / fixture / method / category) "Üí `--filter` / documented editor-flag policy.
 - [ ] Negation and regex: mirror UTF (`-testfilter`) to the extent the CLI exposes (`--filter`).
 
 ---
 
-## Epic 2 ‚Äî Run ALL tests (product MVP)
+## Epic 2 - Run ALL tests (product MVP)
 
-### 2.1 Run All ‚Äî Edit Mode
-- [ ] **TDD (unit):** ‚ÄúRun All EditMode‚Äù session ‚Üí one `unity test --mode EditMode` ‚Üí results applied to the session model.
-- [ ] Manual criterion: fixture project with ‚â•1 Edit Mode pass and ‚â•1 fail ‚Üí Rider shows correct green/red.
+### 2.1 Run All - Edit Mode
+- [ ] **TDD (unit):** """Run All EditMode""" session "Üí one `unity test --mode EditMode` "Üí results applied to the session model.
+- [ ] Manual criterion: fixture project with "â•1 Edit Mode pass and "â•1 fail "Üí Rider shows correct green/red.
 
-### 2.2 Run All ‚Äî Play Mode (Editor)
+### 2.2 Run All - Play Mode (Editor)
 - [ ] Same for `--mode PlayMode`.
 - [ ] Document: headless Play Mode may need `-nographics` (forward after `--` once validated); note GPU/input-dependent test risk.
 
-### 2.3 Run All ‚Äî Player (BuildTarget)
+### 2.3 Run All - Player (BuildTarget)
 - [ ] **TDD:** builder accepts `StandaloneOSX` / `StandaloneWindows64` / `StandaloneLinux64`.
-- [ ] Setting: default ‚ÄúPlayer target‚Äù = host platform.
+- [ ] Setting: default """Player target""" = host platform.
 - [ ] Higher default timeout (Player build); dedicated setting.
-- [ ] Criterion: fixture Play Mode test runs with `--mode <BuildTarget>` and XML returns (local network / heartbeat ‚Äî see `-playerHeartbeatTimeout` in UTF docs).
+- [ ] Criterion: fixture Play Mode test runs with `--mode <BuildTarget>` and XML returns (local network / heartbeat - see `-playerHeartbeatTimeout` in UTF docs).
 - [ ] Note: Player is the third UI tab (**Player**), not a third test attribute kind.
 
-### 2.4 Run All ‚Äî three modes in sequence (‚ÄúAll platforms‚Äù)
-- [ ] Action/session: EditMode ‚Üí PlayMode ‚Üí Player (configurable: which are enabled).
+### 2.4 Run All - three modes in sequence ("""All platforms""")
+- [ ] Action/session: EditMode "Üí PlayMode "Üí Player (configurable: which are enabled).
 - [ ] **TDD:** failure in one mode does not skip the others (aggregate results); aggregate outcome: FailedTests if any XML has failures; InfraError if any run produced no XML.
 - [ ] Progress: report current phase (Edit / Play / Player) in the Unit Tests window / notification.
 
@@ -174,18 +174,18 @@ Current scaffold: [resharper-rider-plugin](https://github.com/JetBrains/resharpe
 
 ---
 
-## Epic 3 ‚Äî Rider Unit Testing provider
+## Epic 3 - Rider Unit Testing provider
 
 ### 3.1 Discovery
 - [ ] Choose MVP strategy:
   - **A (fast):** reuse Unity Support / NUnit gutter discovery when present; our runner only **executes**.
   - **B:** own discovery via PSI (`[Test]`, `[UnityTest]`, Editor vs runtime asmdef).
-- [ ] **TDD** for the chosen option (elements ‚Üí `IUnitTestElement` kinds).
+- [ ] **TDD** for the chosen option (elements "Üí `IUnitTestElement` kinds).
 - [ ] Document the decision briefly in code and here.
 
 ### 3.2 `IUnitTestProvider` + CLI task runner
 - [ ] Stable provider id (e.g. `UnityCliTest`).
-- [ ] Runners in the Unit Tests window selector: **Unity CLI ‚Äî Edit Mode**, **Unity CLI ‚Äî Play Mode**, **Unity CLI ‚Äî Player**.
+- [ ] Runners in the Unit Tests window selector: **Unity CLI - Edit Mode**, **Unity CLI - Play Mode**, **Unity CLI - Player**.
 - [ ] `GetTaskSequence` / remote tasks that call `IUnityCliRunner` and map events:
   - suite started/finished
   - test started/finished (Pass/Fail/Ignore)
@@ -193,24 +193,24 @@ Current scaffold: [resharper-rider-plugin](https://github.com/JetBrains/resharpe
 - [ ] **TDD:** with XML fixture + fake process, the Rider session receives the expected event sequence (isolated host test).
 
 ### 3.3 Coexistence with Unity Editor runners
-- [ ] Do not remove ‚ÄúUnity Editor ‚Äî Edit/Play Mode‚Äù.
+- [ ] Do not remove """Unity Editor - Edit/Play Mode""".
 - [ ] Suggested default when the Editor is **not** connected: CLI.
-- [ ] When the Editor is connected: still allow CLI (batch) ‚Äî document the trade-off (two Editors / Library lock).
+- [ ] When the Editor is connected: still allow CLI (batch) - document the trade-off (two Editors / Library lock).
 
-### 3.4 RD protocol (frontend ‚Üî backend)
+### 3.4 RD protocol (frontend "Üî backend)
 - [ ] Replace `myCall` / `myIconCall` stubs with a real model: settings, last run, CLI status, player target.
 - [ ] RD generation test (`rdgen`) + minimal round-trip call.
 
 ---
 
-## Epic 4 ‚Äî Minimal Rider UX
+## Epic 4 - Minimal Rider UX
 
 ### 4.1 Settings
 - [ ] Unity CLI path
 - [ ] Timeouts (Edit / Play / Player)
 - [ ] Player `BuildTarget`
 - [ ] Extra flags (allow-install? nographics?)
-- [ ] Which modes are included in ‚ÄúRun All (CLI)‚Äù
+- [ ] Which modes are included in """Run All (CLI)"""
 
 ### 4.2 Error feedback
 - [ ] Messages for: missing CLI, license, Safe Mode compile errors, timeout, invalid platform.
@@ -221,12 +221,12 @@ Current scaffold: [resharper-rider-plugin](https://github.com/JetBrains/resharpe
 
 ---
 
-## Epic 5 ‚Äî Pipeline package (post-MVP)
+## Epic 5 - Pipeline package (post-MVP)
 
 Only after the batch CLI MVP is stable.
 
 ### 5.1 Detect Editor + Pipeline ready
-- [ ] `unity status --format json` ‚Üí state `ready`.
+- [ ] `unity status --format json` "Üí state `ready`.
 - [ ] Fallback: if no Editor, use `unity test` (batch).
 
 ### 5.2 `unity command run_tests` / Pipeline API
@@ -234,12 +234,12 @@ Only after the batch CLI MVP is stable.
 - [ ] Player via Pipeline: validate current docs; if missing, keep batch CLI only for Player.
 - [ ] **TDD** with an HTTP mock of the Pipeline server.
 
-### 5.3 Preference ‚Äúlive Editor vs batch‚Äù
+### 5.3 Preference """live Editor vs batch"""
 - [ ] Setting: Auto \| Always batch \| Prefer live Pipeline.
 
 ---
 
-## Epic 6 ‚Äî Quality and release
+## Epic 6 - Quality and release
 
 ### 6.1 Plugin test coverage
 - [ ] Unit: builder, parser, exit codes, project detection at an agreed threshold.
@@ -251,7 +251,7 @@ Only after the batch CLI MVP is stable.
 - [ ] Troubleshooting: Library lock, Safe Mode, Player heartbeat, exit 6 vs 8.
 
 ### 6.3 Packaging
-- [ ] `buildPlugin` ‚Üí Marketplace / local install.
-- [ ] CHANGELOG entry for ‚ÄúRun all Unity tests via CLI (Edit / Play / Player)‚Äù.
+- [ ] `buildPlugin` "Üí Marketplace / local install.
+- [ ] CHANGELOG entry for """Run all Unity tests via CLI (Edit / Play / Player)""".
 
 ---

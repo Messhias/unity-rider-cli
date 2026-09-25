@@ -1,14 +1,25 @@
 <idea-plugin require-restart="true">
   <id>com.jetbrains.rider.plugins.unityclipipeline</id>
-  <name>Unity Rider CLI Pipeline</name>
+  <name>Unity CLI Test Runner</name>
   <version>_PLACEHOLDER_</version>
   <vendor url="https://github.com/Messhias">Fabio William Conceição</vendor>
   <depends>com.intellij.modules.rider</depends>
 
+  <!--
+    Coexistence with bundled Unity Support (com.intellij.resharper.unity):
+    this plugin does not replace or disable Editor-based runners, gutters, or
+    test discovery. No hard dependency is declared so the CLI runner still loads
+    when Unity Support is disabled; Epic 3 may add an optional depends if we
+    reuse discovery APIs.
+  -->
   <description><![CDATA[
-    <p>Run <b>Unity Test Framework</b> tests from Rider <b>without opening the Unity Editor UI</b>.</p>
-    <p>Uses the official Unity CLI in batch mode (<code>unity test</code>): headless Editor, Test Runner,
-    and NUnit report — then surfaces results in Rider's Unit Tests window.</p>
-    <p>Supports Edit Mode, Play Mode, and Player targets, so you can run the suite when the Editor is too heavy or not open.</p>
+    <p><b>Unity CLI Test Runner</b>: run Unity Test Framework tests from Rider
+    <b>without opening the Unity Editor UI</b>.</p>
+    <p>Uses the official Unity CLI in batch mode (<code>unity test</code>): headless Editor,
+    Test Runner, and NUnit report, then surfaces results in Rider's Unit Tests window.</p>
+    <p>Supports Edit Mode, Play Mode, and Player targets.</p>
+    <p><b>Coexistence:</b> works alongside the bundled Unity Support plugin. Existing
+    gutters, discovery, and "Unity Editor - Edit/Play Mode" runners stay intact;
+    this plugin only adds headless CLI execution.</p>
   ]]></description>
 </idea-plugin>

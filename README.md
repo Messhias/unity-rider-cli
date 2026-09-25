@@ -6,11 +6,11 @@
 
 A **JetBrains Rider** plugin that runs **Unity Test Framework** tests from Rider **without opening the Unity Editor UI**.
 
-It drives the official [Unity CLI](https://docs.unity.com/en-us/unity-cli/unity-cli-reference) in batch mode (`unity test`): headless Editor, Test Runner, NUnit report — then surfaces results in Rider’s Unit Tests window.
+It drives the official [Unity CLI](https://docs.unity.com/en-us/unity-cli/unity-cli-reference) in batch mode (`unity test`): headless Editor, Test Runner, NUnit report, then surfaces results in Rider's Unit Tests window.
 
 ## Why
 
-Rider’s bundled Unity Support can already discover and run Unity tests, but it expects a **live Editor** plus `com.unity.ide.rider`. That works well when Unity is already open; it hurts when you only want to run the suite and the Editor is too heavy (or not open at all).
+Rider""'s bundled Unity Support can already discover and run Unity tests, but it expects a **live Editor** plus `com.unity.ide.rider`. That works well when Unity is already open; it hurts when you only want to run the suite and the Editor is too heavy (or not open at all).
 
 This plugin targets that gap:
 
@@ -49,8 +49,12 @@ Exit codes that matter for the plugin:
 |---|---|
 | `0` | All passed |
 | `8` | Run finished; at least one test failed |
-| `6` | Infrastructure failure (compile, license, crash, timeout, …) |
+| `6` | Infrastructure failure (compile, license, crash, timeout, ""�) |
 | `2` | Bad arguments |
+
+## Coexistence with Unity Support
+
+This plugin does **not** replace Rider""'s bundled [Unity Support](https://www.jetbrains.com/help/rider/Running_and_Debugging_Unity_Tests.html) (`com.intellij.resharper.unity`). Gutters, discovery, and Editor-based Edit/Play Mode runners stay as they are. There is **no hard dependency** on Unity Support: the CLI runner still loads if that plugin is disabled. Later slices may add an optional dependency only if we reuse its discovery APIs.
 
 ## Status
 
@@ -85,10 +89,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## References
 
-- [Unity CLI — `test`](https://docs.unity.com/en-us/unity-cli/unity-cli-reference)
-- [Unity Test Framework — command line](https://docs.unity.com/en-us/engine/6000.7/manual/scripting/test-framework-introduction/reference-command-line)
+- [Unity CLI - `test`](https://docs.unity.com/en-us/unity-cli/unity-cli-reference)
+- [Unity Test Framework - command line](https://docs.unity.com/en-us/engine/6000.7/manual/scripting/test-framework-introduction/reference-command-line)
 - [CLI vs Pipeline package](https://docs.unity.com/en-us/unity-production-pipeline/local-tools-cli/unity-cli-pipeline-package)
-- [Rider — run Unity tests (official)](https://www.jetbrains.com/help/rider/Running_and_Debugging_Unity_Tests.html)
+- [Rider - run Unity tests (official)](https://www.jetbrains.com/help/rider/Running_and_Debugging_Unity_Tests.html)
 
 ## License
 

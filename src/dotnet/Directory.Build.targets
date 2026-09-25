@@ -23,7 +23,7 @@
 
     <Message Importance="high"
              Condition="'$(_NeedsPrepare)' == 'true'"
-             Text="Rider SDK not prepared — running ./gradlew :prepare..." />
+             Text="Rider SDK not prepared - running ./gradlew :prepare..." />
 
     <Exec Command="&quot;$(GradleWrapper)&quot; :prepare"
           WorkingDirectory="$(RepoRoot)"
@@ -45,7 +45,7 @@
 
     <Message Importance="high"
              Condition="'$(_NeedsNestedRebuild)' == 'true'"
-             Text="JetBrains packages not resolved — forcing NuGet restore and rebuilding..." />
+             Text="JetBrains packages not resolved - forcing NuGet restore and rebuilding..." />
 
     <!-- Force restore: NuGet can report up-to-date while project.assets.json has zero packages -->
     <Exec Command="dotnet restore --force &quot;$(MSBuildProjectFullPath)&quot;"
