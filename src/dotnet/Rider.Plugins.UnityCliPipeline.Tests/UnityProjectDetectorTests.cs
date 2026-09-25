@@ -86,4 +86,32 @@ public class UnityProjectDetectorTests
 
         Assert.Null(info);
     }
+
+    [Fact]
+    public void Returns_null_for_non_lts_editor_version()
+    {
+        var root = CreateTempUnityProject("6000.1.0f1");
+        try
+        {
+            var info = UnityProjectDetector.TryDetectFromSolutionPath(root);
+            Assert.Null(info);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    private static string CreateTempUnityProject(string editorVersion)
+    {
+        var root = Path.Combine(Path.GetTempPath(), "unity-cli-pipeline-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(Path.Combine(root, "Assets"));
+        Directory.CreateDirectory(Path.Combine(root, "Packages"));
+        Directory.CreateDirectory(Path.Combine(root, "ProjectSettings"));
+        File.WriteAllText(Path.Combine(root, "Packages", "manifest.json"), "{}");
+        File.WriteAllText(
+            Path.Combine(root, "ProjectSettings", "ProjectVersion.txt"),
+            $"m_EditorVersion: {editorVersion}\n");
+        return root;
+    }
 }

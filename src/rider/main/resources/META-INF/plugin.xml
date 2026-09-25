@@ -22,4 +22,12 @@
     gutters, discovery, and "Unity Editor - Edit/Play Mode" runners stay intact;
     this plugin only adds headless CLI execution.</p>
   ]]></description>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationConfigurable
+        parentId="tools"
+        instance="com.jetbrains.rider.plugins.unityclipipeline.settings.UnityCliPipelineConfigurable"
+        id="com.jetbrains.rider.plugins.unityclipipeline.settings"
+        displayName="Unity CLI Test Runner"/>
+  </extensions>
 </idea-plugin>

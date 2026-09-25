@@ -1,0 +1,59 @@
+name: Quality Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: quality-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dotnet-unit-tests:
+    name: .NET unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Run Core unit tests
+        run: >
+          dotnet test
+          src/dotnet/Rider.Plugins.UnityCliPipeline.Tests/Rider.Plugins.UnityCliPipeline.Tests.csproj
+          --configuration Release
+          --nologo
+          --logger "trx;LogFileName=dotnet-unit-tests.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-unit-test-results
+          path: "**/TestResults/*.trx"
+          if-no-files-found: ignore
+
+  plugin-xml:
+    name: plugin.xml contract
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run PluginXmlTest
+        run: ./gradlew :test --tests "com.jetbrains.rider.plugins.unityclipipeline.test.PluginXmlTest"

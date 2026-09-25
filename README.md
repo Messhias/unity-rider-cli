@@ -49,7 +49,7 @@ Exit codes that matter for the plugin:
 |---|---|
 | `0` | All passed |
 | `8` | Run finished; at least one test failed |
-| `6` | Infrastructure failure (compile, license, crash, timeout, ""¦) |
+| `6` | Infrastructure failure (compile, license, crash, timeout, ""?) |
 | `2` | Bad arguments |
 
 ## Coexistence with Unity Support
@@ -59,6 +59,10 @@ This plugin does **not** replace Rider""'s bundled [Unity Support](https://www.j
 ## Status
 
 Early scaffold (Rider plugin template + RD protocol). Product work is tracked in [Tasks.md](Tasks.md) and developed with **TDD**.
+
+**Support policy (for now):**
+- Unity **Editor**: current LTS only (`6000.0.x`, `2022.3.x`, final `f` builds). Tech Stream / alpha / beta / older LTS are ignored.
+- Unity **CLI**: public beta line until Unity ships a stable CLI; minimum `1.0.0-beta.1`.
 
 ## Run (dev)
 
@@ -82,8 +86,11 @@ That prepares the Rider SDK / RD model, builds the .NET backend, and opens a tes
 
 ```bash
 ./gradlew :buildPlugin   # ZIP under build/distributions
-./gradlew :check         # tests
+./gradlew :check         # tests (includes :testDotNet)
+dotnet test src/dotnet/Rider.Plugins.UnityCliPipeline.Tests/Rider.Plugins.UnityCliPipeline.Tests.csproj
 ```
+
+PRs and pushes to `main` run the [Quality Gate](.github/workflows/quality-gate.yml) workflow (Core unit tests + `PluginXmlTest`).
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
