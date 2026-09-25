@@ -177,19 +177,21 @@ tasks {
         dependsOn(compileDotNet)
 
         val outputFolder = file("$dotNetSrcDir/$dotNetPluginId/bin/${dotNetPluginId}/$buildConfiguration")
-        val requiredPluginFiles = listOf(
+        // Ship only our assemblies. Copying JetBrains/*.dll into the plugin package
+        // duplicates host packages and crashes the backend (duplicate simple name).
+        val pluginFiles = listOf(
             "$outputFolder/${dotNetPluginId}.dll",
-            "$outputFolder/Rider.Plugins.UnityCliPipeline.Core.dll"
+            "$outputFolder/${dotNetPluginId}.pdb",
+            "$outputFolder/Rider.Plugins.UnityCliPipeline.Core.dll",
+            "$outputFolder/Rider.Plugins.UnityCliPipeline.Core.pdb"
         )
 
-        from(fileTree(outputFolder) {
-            include("*.dll", "*.pdb")
-        }) {
+        from(pluginFiles) {
             into("${rootProject.name}/dotnet")
         }
 
         doLast {
-            for (f in requiredPluginFiles) {
+            for (f in pluginFiles) {
                 val file = file(f)
                 if (!file.exists()) throw RuntimeException("File \"$file\" does not exist.")
             }

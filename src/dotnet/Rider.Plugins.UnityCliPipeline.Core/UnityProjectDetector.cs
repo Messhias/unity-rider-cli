@@ -30,7 +30,8 @@ public static class UnityProjectDetector
             if (editorVersion is null)
                 return null;
 
-            return new UnityProjectInfo(Path.GetFullPath(current.FullName), editorVersion);
+            // Provider stays inactive for non-LTS / prerelease Editor projects.
+            return !UnityEditorLtsSupport.IsSupported(editorVersion) ? null : new UnityProjectInfo(Path.GetFullPath(current.FullName), editorVersion);
         }
 
         return null;
