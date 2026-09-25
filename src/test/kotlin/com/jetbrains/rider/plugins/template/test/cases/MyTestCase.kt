@@ -47,7 +47,7 @@ class MyTestCase : PerClassSolutionTestBase() {
             val myService = project.service<ProtocolCaller>()
 
             val iconFromBackend = myService.doIconCall()
-            val iconFromFrontend = MyIcons.RiderIcon
+            val iconFromFrontend = MyIcons.Logo
 
             val imageFrontend = BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB)
             val graphicsFrontend = imageFrontend.createGraphics()

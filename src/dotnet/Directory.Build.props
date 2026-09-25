@@ -3,7 +3,10 @@
         <TargetFramework>net8.0</TargetFramework>
         <LangVersion>latest</LangVersion>
 
-        <NoWarn>NU1701</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
+        <!-- NU1701: JetBrains packages target older TFMs; MSB3277: System.Text.Json version conflict from JetBrains refs -->
+        <NoWarn>NU1701;MSB3277</NoWarn>
 
         <NoPackageAnalysis>true</NoPackageAnalysis>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -17,10 +20,6 @@
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <DefineConstants>TRACE;DEBUG;JET_MODE_ASSERT</DefineConstants>
     </PropertyGroup>
-
-    <Target BeforeTargets="CoreCompile" Name="CheckForGradlePrepared" Condition="!Exists('$(JetBrainsRiderRdBackendCommonReference)')">
-        <Error Text="Please run `./gradlew :prepare`" />
-    </Target>
 
     <Import Project="$(MSBuildThisFileDirectory)..\..\build\DotNetSdkPath.Generated.props" Condition="Exists('$(MSBuildThisFileDirectory)..\..\build\DotNetSdkPath.Generated.props')" />
 

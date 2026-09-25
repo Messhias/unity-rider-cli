@@ -4,5 +4,5 @@ import com.intellij.openapi.util.IconLoader
 
 object MyIcons {
     @JvmField
-    val RiderIcon = IconLoader.getIcon("icons/rider.svg", javaClass)
+    val Logo = IconLoader.getIcon("icons/logo.svg", javaClass)
 }

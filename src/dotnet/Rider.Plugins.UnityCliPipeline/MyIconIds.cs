@@ -5,5 +5,5 @@ namespace Rider.Plugins.UnityCliPipeline;
 
 public static class MyIconIds
 {
-    public static readonly IconId RiderIconId = new FrontendIconId("icons/rider.svg");
+    public static readonly IconId LogoId = new FrontendIconId("icons/logo.svg");
 }

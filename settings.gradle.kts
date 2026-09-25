@@ -1,6 +1,3 @@
-rootProject.name = "RiderUnityCliPipeline"
-include(":protocol")
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -14,3 +11,11 @@ pluginManagement {
         }
     }
 }
+
+plugins {
+    // Auto-provision JDK 21 for kotlin.jvmToolchain when it is not installed locally
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
+
+rootProject.name = "RiderUnityCliPipeline"
+include(":protocol")
