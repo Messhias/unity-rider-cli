@@ -2,4 +2,8 @@
 
     <Import Project="$(JetBrainsRiderRdBackendCommonReference)" Condition="Exists('$(JetBrainsRiderRdBackendCommonReference)')"/>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Rider.Plugins.UnityCliPipeline.Core\Rider.Plugins.UnityCliPipeline.Core.csproj" />
+    </ItemGroup>
+
 </Project>

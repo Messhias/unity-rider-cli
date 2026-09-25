@@ -88,9 +88,9 @@ Current scaffold: [resharper-rider-plugin](https://github.com/JetBrains/resharpe
 - [x] Test: valid `plugin.xml` / `./gradlew :buildPlugin` produces a ZIP.
 
 ### 0.2 Detect a Unity project from the Rider solution
-- [ ] **TDD:** given a solution path, detect Unity root (`Assets/`, `Packages/manifest.json`, `ProjectSettings/ProjectVersion.txt`).
-- [ ] Return `UnityProjectInfo` (path, `editorVersion` from `ProjectVersion.txt`).
-- [ ] Negative: plain .NET solution "†’ provider inactive.
+- [x] **TDD:** given a solution path, detect Unity root (`Assets/`, `Packages/manifest.json`, `ProjectSettings/ProjectVersion.txt`).
+- [x] Return `UnityProjectInfo` (path, `editorVersion` from `ProjectVersion.txt`).
+- [x] Negative: plain .NET solution -> provider inactive.
 
 ### 0.3 Resolve the `unity` CLI binary
 - [ ] **TDD:** PATH resolution (`which unity` / `Get-Command`), settings override, clear error if missing.

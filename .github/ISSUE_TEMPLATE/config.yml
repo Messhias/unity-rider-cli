@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Tasks / roadmap
+    url: https://github.com/Messhias/unity-rider-cli/blob/main/Tasks.md
+    about: Plugin scope and task order
